@@ -1,78 +1,78 @@
-Vue.component('component-docentes',{
+Vue.component('component-materias',{
     data() {
         return {
             accion:'nuevo',
             buscar: '',
-            docentes: [],
-            docente:{
-                idDocente : '',
+            materias: [],
+            materia:{
+                idMateria : '',
                 codigo : '',
                 nombre : '',
             }
         }
     },
     methods:{
-        guardarDocente(){
-            this.listarDocentes();
+        guardarMateria(){
+            this.listarMaterias();
             if(this.accion==='nuevo'){
-                this.docente.idDocente = new Date().getTime().toString(16);
-                this.docentes.push( JSON.parse( JSON.stringify(this.docente) ) );
+                this.materia.idMateria = new Date().getTime().toString(16);
+                this.materias.push( JSON.parse( JSON.stringify(this.materia) ) );
             }else if(this.accion==='modificar'){
-                let index = this.docentes.findIndex(docente=>docente.idDocente==this.docente.idDocente);
-                this.docentes[index] = JSON.parse( JSON.stringify(this.docente) );
+                let index = this.materias.findIndex(materia=>materia.idMateria==this.materia.idMateria);
+                this.materias[index] = JSON.parse( JSON.stringify(this.materia) );
             }else if(this.accion==='eliminar'){
-                let index = this.docentes.findIndex(docente=>docente.idDocente==this.docente.idDocente);
-                this.docentes.splice(index,1);
+                let index = this.materias.findIndex(materia=>materia.idMateria==this.materia.idMateria);
+                this.materias.splice(index,1);
             }
-            localStorage.setItem("docentes", JSON.stringify(this.docentes) );
-            this.nuevoDocente();
+            localStorage.setItem("materias", JSON.stringify(this.materias) );
+            this.nuevoMateria();
         },
-        eliminarDocente(docente){
-            if( confirm(`Esta seguro de eliminar a ${docente.nombre}?`) ){
+        eliminarMateria(materia){
+            if( confirm(`Esta seguro de eliminar a ${materia.nombre}?`) ){
                 this.accion='eliminar';
-                this.docente=docente;
-                this.guardarDocente();
+                this.materia=materia;
+                this.guardarMateria();
             }
         },
-        nuevoDocente(){
+        nuevoMateria(){
             this.accion = 'nuevo';
-            this.docente.idDocente = '';
-            this.docente.codigo = '';
-            this.docente.nombre = '';
+            this.materia.idMateria = '';
+            this.materia.codigo = '';
+            this.materia.nombre = '';
         },
-        modificarDocente(docente){
+        modificarMateria(materia){
             this.accion = 'modificar';
-            this.docente = docente;
+            this.materia = materia;
         },
-        listarDocentes(){
-            this.docentes = JSON.parse( localStorage.getItem('docentes') || "[]" )
-                .filter(docente=>docente.nombre.toLowerCase().indexOf(this.buscar.toLowerCase())>-1);
+        listarMaterias(){
+            this.materias = JSON.parse( localStorage.getItem('materias') || "[]" )
+                .filter(materia=>materia.nombre.toLowerCase().indexOf(this.buscar.toLowerCase())>-1);
         }
     },
     template: `
         <div class="row">
             <div class="col-12 col-md-6">
                 <div class="card">
-                    <div class="card-header">REGISTRO DE DOCENTE</div>
+                    <div class="card-header">REGISTRO DE MATERIA</div>
                     <div class="card-body">
-                        <form id="frmDocente" @reset.prevent="nuevoDocente" v-on:submit.prevent="guardarDocente">
+                        <form id="frmMateria" @reset.prevent="nuevoMateria" v-on:submit.prevent="guardarMateria">
                             <div class="row p-1">
                                 <div class="col-3 col-md-2">
-                                    <label for="txtCodigoDocente">CODIGO:</label>
+                                    <label for="txtCodigoMateria">CODIGO:</label>
                                 </div>
                                 <div class="col-3 col-md-3">
                                     <input required pattern="[0-9]{3}" 
-                                        title="Ingrese un codigo de docente de 3 digitos"
-                                            v-model="docente.codigo" type="text" class="form-control" name="txtCodigoDocente" id="txtCodigoDocente">
+                                        title="Ingrese un codigo de materia de 3 digitos"
+                                            v-model="materia.codigo" type="text" class="form-control" name="txtCodigoMateria" id="txtCodigoMateria">
                                 </div>
                             </div>
                             <div class="row p-1">
                                 <div class="col-3 col-md-2">
-                                    <label for="txtNombreDocente">NOMBRE:</label>
+                                    <label for="txtNombreMateria">NOMBRE:</label>
                                 </div>
                                 <div class="col-9 col-md-6">
                                     <input required pattern="[A-Za-zÑñáéíóú ]{3,75}"
-                                        v-model="docente.nombre" type="text" class="form-control" name="txtNombreDocente" id="txtNombreDocente">
+                                        v-model="materia.nombre" type="text" class="form-control" name="txtNombreMateria" id="txtNombreMateria">
                                 </div>
                             </div>
                             <div class="row p-1">
@@ -90,14 +90,14 @@ Vue.component('component-docentes',{
             </div>
             <div class="col-12 col-md-6">
                 <div class="card">
-                    <div class="card-header">LISTADO DE DOCENTES</div>
+                    <div class="card-header">LISTADO DE MATERIAS</div>
                     <div class="card-body">
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>BUSCAR:</th>
                                     <th colspan="2"><input type="text" class="form-control" v-model="buscar"
-                                        @keyup="listarDocentes()"
+                                        @keyup="listarMaterias()"
                                         placeholder="Buscar por codigo o nombre"></th>
                                 </tr>
                                 <tr>
@@ -106,10 +106,10 @@ Vue.component('component-docentes',{
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="docente in docentes" :key="docente.idDocente" @click="modificarDocente(docente)" >
-                                    <td>{{ docente.codigo }}</td>
-                                    <td>{{ docente.nombre }}</td>
-                                    <td><button class="btn btn-danger" @click="eliminarDocente(docente)">ELIMINAR</button></td>
+                                <tr v-for="materia in materias" :key="materia.idMateria" @click="modificarMateria(materia)" >
+                                    <td>{{ materia.codigo }}</td>
+                                    <td>{{ materia.nombre }}</td>
+                                    <td><button class="btn btn-danger" @click="eliminarMateria(materia)">ELIMINAR</button></td>
                                 </tr>
                             </tbody>
                         </table>
