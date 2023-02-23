@@ -4,20 +4,212 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Pagina Web</title>
+    <title>Clientes</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
 </head>
-<body>
-    <div class="container" id="app">
+<body>  
+    <body style="background-color: lightsteelblue;">
         
+    </body>
+    <div class="container" id="app"><br> 
+        <div class="row">
+            <div class="col-12 col-md-7">
+                <div class="card" style="color: black;">
+                    <div class="card-header" style="background-color: plum">
+                        <h1 style="text-align: center;" >REGISTRO DE CLIENTES</h1>                        
+                    </div>
+
+                    <div class="card-body">
+                        <form id="frmCliente" @reset.prevent="nuevoCliente" v-on:submit.prevent="guardarCliente">
+                            <div class="row p-1">
+                                <div class="col-3 col-md-2">
+                                    <label for="txtIdCliente">ID:</label>
+                                </div>
+                                <div class="col-4 col-md-4">
+                                    <input required pattern="[0-89]{3}" 
+                                        title="Ingrese un id de cliente de 3 digitos"
+                                            v-model="cliente.id" type="text" class="form-control" name="txtIdCliente" id="txtIdCliente">
+                                </div>
+                            </div>
+                            <div class="row p-1">
+                                <div class="col-3 col-md-2">
+                                    <label for="txtCodigoCliente">CODIGO:</label>
+                                </div>
+                                <div class="col-4 col-md-4">
+                                    <input required pattern="[A-Za-zÑñáéíóú-0-355]{3,75}"
+                                        v-model="cliente.codigo" type="text" class="form-control" name="txtCodigoCliente" id="txtCodigoCliente">
+                                </div>
+                            </div>
+                            <div class="row p-1">
+                                <div class="col-3 col-md-2">
+                                    <label for="txtNombreCliente">NOMBRE:</label>
+                                </div>
+                                <div class="col-4 col-md-4">
+                                    <input required pattern="[A-Za-zÑñáéíóú ]{3,75}"
+                                        v-model="cliente.nombre" type="text" class="form-control" name="txtNombreCliente" id="txtNombreCliente">
+                                </div>
+                            </div>
+                            <div class="row p-1">
+                                <div class="col-3 col-md-2">
+                                    <label for="txtDireccionCliente">DIRECCION:</label>
+                                </div>
+                                <div class="col-4 col-md-4">
+                                    <input required pattern="[A-Za-zÑñáéíóú ]{3,75}"
+                                        v-model="cliente.direccion" type="text" class="form-control" name="txtDireccionCliente" id="txtDireccionCliente">
+                                </div>
+                            </div>
+                            <div class="row p-1">
+                                <div class="col-3 col-md-2">
+                                    <label for="txtZonaCliente">ZONA:</label>
+                                </div>
+                                <div class="col-4 col-md-4">
+                                    <input required pattern="[A-Za-zÑñáéíóú ]{3,75}"
+                                        v-model="cliente.zona" type="text" class="form-control" name="txtZonaCliente" id="txtZonaCliente">
+                                </div>
+                            </div>
+                           
+                            <div class="row p-1">
+                                <div class="col-3 col-md-3">
+                                    <input class="btn btn-primary" type="submit" 
+                                        value="Guardar">
+                                </div>
+                                <div class="col-3 col-md-3">
+                                    <input class="btn btn-warning" type="reset" value="Nuevo">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-7"><br>
+                <div class="card">
+                    <div class="card-header" style="background-color: plum;">
+                        <h1 style="text-align: center;">LISTA DE CLIENTES REGISTRADOS</h1></div>
+
+                    <div class="card-body">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>BUSCAR:</th>
+                                    <th colspan="2"><input type="text" class="form-control" v-model="buscar"
+                                        @keyup="listarClientes()"
+                                        placeholder="Buscar por codigo o nombre"></th>
+                                </tr>
+                                <tr>
+                                    <th>CODIGO</th>
+                                    <th>ID</th>
+                                    <th colspan="2">NOMBRE</th>
+                                </tr>
+                                    <th>ID</th>                                    
+                                    <th>CODIGO</th>
+                                    <th>NOMBRE</th>
+                                    <th>DIRECCION</th>
+                                    <th>ZONA</th>                                   
+                                    <th>ELIMINAR REGISTRO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="cliente in clientes" :key="cliente.idCliente" @click="modificarCliente(cliente)" >
+                                    <td>{{ cliente.id }}</td>
+                                    <td>{{ cliente.codigo }}</td>
+                                    <td>{{ cliente.nombre }}</td>
+                                    <td>{{ cliente.direccion }}</td>
+                                    <td>{{ cliente.zona }}</td>                                    
+                                    <td><button class="btn btn-danger" @click="eliminarCliente(cliente)">ELIMINAR</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
          const { createApp } = Vue;
         createApp({
-            
+            data() {
+                return {
+                    accion:'nuevo',
+                    buscar: '',
+                    clientes: [],
+                    cliente:{                       
+                        id : '',
+                        codigo : '',
+                        nombre : '',
+                        direccion : '',
+                        zona : '',
+                        
+                    }
+                }
+            },
+            methods:{
+                guardarCliente(){
+                    let store = this.abrirStore('tblclientes', 'readwrite');
+                    if(this.accion==='nuevo'){
+                        this.cliente.idCliente = new Date().getTime().toString(16);
+                    }
+                    store.put( JSON.parse(JSON.stringify(this.cliente) ) );
+                    this.listarClientes();
+                    this.nuevoCliente();
+                },
+                eliminarCliente(cliente){
+                    if( confirm(`Esta seguro de eliminar a ${cliente.nombre}?`) ){
+                        let store = this.abrirStore('tblclientes', 'readwrite'),
+                            req = store.delete(cliente.idCliente);
+                        req.onsuccess = resp=>{
+                            this.listarClientes();
+                        };
+                    }
+                },
+                nuevoCliente(){
+                    this.accion = 'nuevo';
+                    this.cliente.id = '';
+                    this.cliente.codigo = '';
+                    this.cliente.nombre = '';
+                    this.cliente.direccion = '';
+                    this.cliente.zona = '';
+                },
+                modificarCliente(cliente){
+                    this.accion = 'modificar';
+                    this.cliente = cliente;
+                },
+                listarClientes(){
+                    let store = this.abrirStore('tblclientes', 'readonly'),
+                        data = store.getAll();
+                    data.onsuccess = resp=>{
+                        this.clientes = data.result
+                            .filter(cliente=>cliente.nombre.toLowerCase().indexOf(this.buscar.toLowerCase())>-1 ||
+                                cliente.codigo.indexOf(this.buscar)>-1);
+                    };
+                },
+                abrirStore(store, modo){
+                    let tx = this.db.transaction(store, modo); //modo = readonly || writeonly
+                    return tx.objectStore(store);
+                },
+                abrirBD(){
+                    let indexDB = indexedDB.open('db_codigo_USIS019521',1);
+                    indexDB.onupgradeneeded=e=>{
+                        let req = e.target.result,
+                            tblcliente = req.createObjectStore('tblclientes', {keyPath:'idCliente'}),
+                            tblalumno = req.createObjectStore('tblalumnos',{keyPath:'idAlumno'}),
+                            tblmateria = req.createObjectStore('tblmaterias',{keyPath:'idMateria'});
+
+                        tblcliente.createIndex('idCliente', 'idCliente', {unique:true});
+                        tblalumno.createIndex('idAlumno', 'idAlumno', {unique:true});
+                        tblmateria.createIndex('idMateria', 'idMateria', {unique:true});
+                    };
+                    indexDB.onsuccess= e=>{
+                        this.db = e.target.result;
+                        this.listarClientes();
+                    };
+                    indexDB.onerror= e=>{
+                        console.error( e );
+                    };
+                },
+            },
             created(){
                 this.abrirBD();
             }
