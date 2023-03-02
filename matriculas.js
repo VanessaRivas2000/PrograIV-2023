@@ -143,6 +143,7 @@ Vue.component('component-matriculas',{
                                 <tr v-for="matricula in matriculas" :key="matricula.idMatricula" @click="modificarMatricula(matricula)" >
                                     <td>{{ new Date(matricula.fecha +' 01:00:00').toLocaleDateString() }}</td>
                                     <td>{{ matricula.pago ? 'ACTUALIZADO' : 'PENDIENTE' }}</td>
+                                    <td><img :src="matricula.comprobante" width="50" height="50"
                                     <td>{{ matricula.alumno.label }}</td>
                                     <td><button class="btn btn-danger" @click="eliminarMatricula(matricula)">ELIMINAR</button></td>
                                 </tr>
