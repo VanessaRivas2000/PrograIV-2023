@@ -5,15 +5,18 @@ Vue.component('component-alumnos',{
             buscar: '',
             alumnos: [],
             alumno:{
-                idAlumno : '',
-                codigo : '',
-                nombre : '',
+                idAlumno  : '',
+                codigo    : '',
+                nombre    : '',
+                direccion : '',
+                telefono  : '',
+                dui       : '',
             }
         }
     },
     methods:{
         guardarAlumno(){
-            this.listarAlumnos();
+            this.listar();
             if(this.accion==='nuevo'){
                 this.alumno.idAlumno = new Date().getTime().toString(16);
                 this.alumnos.push( JSON.parse( JSON.stringify(this.alumno) ) );
@@ -39,12 +42,15 @@ Vue.component('component-alumnos',{
             this.alumno.idAlumno = '';
             this.alumno.codigo = '';
             this.alumno.nombre = '';
+            this.alumno.direccion = '';
+            this.alumno.telefono = '';
+            this.alumno.dui = '';
         },
         modificarAlumno(alumno){
             this.accion = 'modificar';
             this.alumno = alumno;
         },
-        listarAlumnos(){
+        listar(){
             this.alumnos = JSON.parse( localStorage.getItem('alumnos') || "[]" )
                 .filter(alumno=>alumno.nombre.toLowerCase().indexOf(this.buscar.toLowerCase())>-1);
         }
@@ -61,7 +67,7 @@ Vue.component('component-alumnos',{
                                     <label for="txtCodigoAlumno">CODIGO:</label>
                                 </div>
                                 <div class="col-3 col-md-3">
-                                    <input required pattern="[US|SM]{2}[LI|IS](2)[0-9]{6}" 
+                                    <input required pattern="[US|SM]{2}[IS|LI]{2}[0-9]{6}" 
                                         title="Ingrese un codigo de alumno de 3 digitos"
                                             v-model="alumno.codigo" type="text" class="form-control" name="txtCodigoAlumno" id="txtCodigoAlumno">
                                 </div>
@@ -75,7 +81,6 @@ Vue.component('component-alumnos',{
                                         v-model="alumno.nombre" type="text" class="form-control" name="txtNombreAlumno" id="txtNombreAlumno">
                                 </div>
                             </div>
-
                             <div class="row p-1">
                                 <div class="col-3 col-md-2">
                                     <label for="txtDireccionAlumno">DIRECCION:</label>
@@ -112,7 +117,6 @@ Vue.component('component-alumnos',{
                                     <input class="btn btn-warning" type="reset" value="Nuevo">
                                 </div>
                             </div>
-
                         </form>
                     </div>
                 </div>
@@ -126,18 +130,21 @@ Vue.component('component-alumnos',{
                                 <tr>
                                     <th>BUSCAR:</th>
                                     <th colspan="2"><input type="text" class="form-control" v-model="buscar"
-                                        @keyup="listarAlumnos()"
+                                        @keyup="listar()"
                                         placeholder="Buscar por codigo o nombre"></th>
                                 </tr>
                                 <tr>
                                     <th>CODIGO</th>
-                                    <th colspan="2">NOMBRE</th>
+                                    <th colspan="5">NOMBRE</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="alumno in alumnos" :key="alumno.idAlumno" @click="modificarAlumno(alumno)" >
                                     <td>{{ alumno.codigo }}</td>
                                     <td>{{ alumno.nombre }}</td>
+                                    <td>{{ alumno.direccion }}</td>
+                                    <td>{{ alumno.telefono }}</td>
+                                    <td>{{ alumno.dui }}</td>
                                     <td><button class="btn btn-danger" @click="eliminarAlumno(alumno)">ELIMINAR</button></td>
                                 </tr>
                             </tbody>

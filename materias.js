@@ -13,7 +13,7 @@ Vue.component('component-materias',{
     },
     methods:{
         guardarMateria(){
-            this.listarMaterias();
+            this.listar();
             if(this.accion==='nuevo'){
                 this.materia.idMateria = new Date().getTime().toString(16);
                 this.materias.push( JSON.parse( JSON.stringify(this.materia) ) );
@@ -44,7 +44,7 @@ Vue.component('component-materias',{
             this.accion = 'modificar';
             this.materia = materia;
         },
-        listarMaterias(){
+        listar(){
             this.materias = JSON.parse( localStorage.getItem('materias') || "[]" )
                 .filter(materia=>materia.nombre.toLowerCase().indexOf(this.buscar.toLowerCase())>-1);
         }
@@ -97,7 +97,7 @@ Vue.component('component-materias',{
                                 <tr>
                                     <th>BUSCAR:</th>
                                     <th colspan="2"><input type="text" class="form-control" v-model="buscar"
-                                        @keyup="listarMaterias()"
+                                        @keyup="listar()"
                                         placeholder="Buscar por codigo o nombre"></th>
                                 </tr>
                                 <tr>

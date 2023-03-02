@@ -13,7 +13,7 @@ Vue.component('component-docentes',{
     },
     methods:{
         guardarDocente(){
-            this.listarDocentes();
+            this.listar();
             if(this.accion==='nuevo'){
                 this.docente.idDocente = new Date().getTime().toString(16);
                 this.docentes.push( JSON.parse( JSON.stringify(this.docente) ) );
@@ -44,7 +44,7 @@ Vue.component('component-docentes',{
             this.accion = 'modificar';
             this.docente = docente;
         },
-        listarDocentes(){
+        listar(){
             this.docentes = JSON.parse( localStorage.getItem('docentes') || "[]" )
                 .filter(docente=>docente.nombre.toLowerCase().indexOf(this.buscar.toLowerCase())>-1);
         }
@@ -97,7 +97,7 @@ Vue.component('component-docentes',{
                                 <tr>
                                     <th>BUSCAR:</th>
                                     <th colspan="2"><input type="text" class="form-control" v-model="buscar"
-                                        @keyup="listarDocentes()"
+                                        @keyup="listar()"
                                         placeholder="Buscar por codigo o nombre"></th>
                                 </tr>
                                 <tr>
